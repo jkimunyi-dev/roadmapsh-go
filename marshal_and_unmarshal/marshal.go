@@ -3,47 +3,42 @@ package marshal_and_unmarshal
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 )
 
-type (
-	Person struct {
-		Name    string
-		Age     int
-		Address Address
-		Pets    []Pet
-	}
-
-	Address struct {
-		Line1  string
-		Line2  string
-		Postal int
-	}
-
-	Pet struct {
-		Name  string
-		Kind  string
-		Age   int
-		Color string
-	}
-)
-
 func ConvertToJson() {
-	data, err := os.ReadFile("complex-data.json")
+	// struct to json
+
+	jimmie := Person{
+		Name: "Jimmie",
+		Age:  25,
+		Address: Address{
+			Line1:  "Block 78 Woodgrove Avenue 5",
+			Line2:  "Unit #05-111",
+			Postal: "654378",
+		},
+		Pets: []Pet{
+			{
+				Name:  "Lex",
+				Kind:  "Dog",
+				Age:   4,
+				Color: "Gray",
+			},
+			{
+				Name:  "Faye",
+				Kind:  "Cat",
+				Age:   6,
+				Color: "Orange",
+			},
+		},
+	}
+
+	jimmieJson, err := json.Marshal(jimmie)
 	if err != nil {
-		fmt.Printf("Failed to read file : %v\n", err.Error())
+		fmt.Printf("Failed to marshal : %v\n", err.Error())
 		return
 	}
 
-	var person Person
-
-	json.Unmarshal(data, &person)
-
-	fmt.Printf("Name : %s\n", person.Name)
-	fmt.Printf("Age : %d\n", person.Age)
-	fmt.Printf("Address : %v\n", person.Address)
-	fmt.Printf("Pets : %v\n", person.Pets)
-	personType := reflect.TypeOf(person).Kind()
-	fmt.Printf(personType.String())
+	fmt.Println(string(jimmieJson))
+	fmt.Println(reflect.TypeOf(jimmieJson))
 }
